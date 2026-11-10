@@ -1,0 +1,45 @@
+http:
+  routers:
+    pitch-upload:
+      rule: Host(`example.invalid`) && PathRegexp(`^/api/v1/drafts/[a-f0-9-]{36}/pitches$`) && Method(`POST`)
+      priority: 200
+      entryPoints: [websecure]
+      service: runtime
+      middlewares: [upload-duplex]
+      tls:
+        certResolver: letsencrypt
+    catalogue:
+      rule: Host(`example.invalid`) && (Path(`/catalogue`) || PathPrefix(`/catalogue/`))
+      priority: 100
+      entryPoints: [websecure]
+      service: catalogue
+      middlewares: [catalogue-prefix]
+      tls:
+        certResolver: letsencrypt
+    runtime:
+      rule: Host(`example.invalid`)
+      entryPoints: [websecure]
+      service: runtime
+      tls:
+        certResolver: letsencrypt
+  middlewares:
+    upload-duplex:
+      plugin:
+        uploadduplex: {}
+    catalogue-prefix:
+      stripPrefix:
+        prefixes: [/catalogue]
+  services:
+    catalogue:
+      loadBalancer:
+        servers:
+          - url: http://brag-preview:8080
+    runtime:
+      loadBalancer:
+        servers:
+          - url: http://brag-runtime:3200
+tls:
+  options:
+    default:
+      minVersion: VersionTLS12
+      sniStrict: true

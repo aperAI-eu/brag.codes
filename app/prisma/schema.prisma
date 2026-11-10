@@ -1,0 +1,351 @@
+generator client {
+  provider = "prisma-client"
+  output = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  schemas = ["brag"]
+}
+
+model RuntimeMetadata {
+  id Int @id
+  schemaVersion Int @map("schema_version")
+  installedAt DateTime @default(now()) @map("installed_at") @db.Timestamptz(6)
+
+  @@map("runtime_metadata")
+  @@schema("brag")
+}
+
+// Private auth adapter storage; never a public author profile or recovery enrolment.
+model User {
+  id String @id @default(uuid())
+  name String
+  email String @unique
+  emailVerified Boolean @default(false)
+  image String?
+  active Boolean @default(true)
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @db.Timestamptz(6)
+  sessions Session[]
+  accounts Account[]
+  platformRole PlatformRole?
+  roleAudits RoleAudit[]
+  eventApprovals EventSourceAlias[]
+  eventMutations EventMutation[]
+  eventAudits EventAudit[]
+  @@map("auth_user")
+  @@schema("brag")
+}
+
+model Session {
+  id String @id @default(uuid())
+  token String @unique
+  expiresAt DateTime @db.Timestamptz(6)
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @db.Timestamptz(6)
+  ipAddress String?
+  userAgent String?
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId])
+  @@map("auth_session")
+  @@schema("brag")
+}
+
+model Account {
+  id String @id @default(uuid())
+  accountId String
+  providerId String
+  issuer String @default("https://accounts.google.com")
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken String?
+  refreshToken String?
+  idToken String?
+  accessTokenExpiresAt DateTime? @db.Timestamptz(6)
+  refreshTokenExpiresAt DateTime? @db.Timestamptz(6)
+  scope String?
+  password String?
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @db.Timestamptz(6)
+  @@unique([providerId, issuer, accountId])
+  @@index([userId])
+  @@map("auth_account")
+  @@schema("brag")
+}
+
+model Verification {
+  id String @id @default(uuid())
+  identifier String @unique
+  value String
+  expiresAt DateTime @db.Timestamptz(6)
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @db.Timestamptz(6)
+  claimed Boolean @default(false)
+  @@map("auth_verification")
+  @@schema("brag")
+}
+
+model AuthThrottle {
+  key String @id
+  window DateTime @db.Timestamptz(6)
+  count Int
+  @@map("auth_throttle")
+  @@schema("brag")
+}
+
+model PlatformRole {
+  userId String @id
+  user User @relation(fields: [userId], references: [id], onDelete: Restrict)
+  role String @default("platform_admin")
+  active Boolean
+  version Int
+  updatedAt DateTime @db.Timestamptz(6)
+  @@map("platform_role")
+  @@schema("brag")
+}
+
+// The request ID is also the idempotency receipt. Bootstrap is an explicit action.
+model RoleAudit {
+  requestId String @id
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Restrict)
+  action String
+  version Int
+  operator String
+  reason String
+  evidence String
+  commandHash String
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  @@unique([userId, version])
+  @@map("role_audit")
+  @@schema("brag")
+}
+
+model Event {
+  id String @id @db.Uuid
+  title String
+  description String @default("")
+  location String @default("")
+  timezone String
+  startsAt DateTime @map("starts_at") @db.Timestamptz(6)
+  opensAt DateTime @map("submissions_open_at") @db.Timestamptz(6)
+  closesAt DateTime @map("submissions_close_at") @db.Timestamptz(6)
+  approval String
+  manuallyClosed Boolean @default(false) @map("manually_closed")
+  version Int
+  generation Int
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+  aliases EventSourceAlias[]
+  audit EventAudit[]
+  @@map("event")
+  @@schema("brag")
+}
+model EventSourceAlias {
+  id String @id @db.Uuid
+  eventId String @map("event_id") @db.Uuid
+  event Event @relation(fields: [eventId], references: [id], onDelete: Restrict)
+  provider String
+  sourceKey String @unique @map("source_key")
+  url String
+  state String
+  version Int
+  approvedBy String? @map("approved_by")
+  approver User? @relation(fields: [approvedBy], references: [id], onDelete: Restrict)
+  approvedAt DateTime? @map("approved_at") @db.Timestamptz(6)
+  @@map("event_source_alias")
+  @@schema("brag")
+}
+model EventMutation {
+  actorId String @map("actor_id")
+  actor User @relation(fields: [actorId], references: [id], onDelete: Restrict)
+  key String @db.Uuid
+  intentHash String @map("intent_hash")
+  result Json
+  status Int
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  @@id([actorId, key])
+  @@map("event_mutation")
+  @@schema("brag")
+}
+model EventAudit {
+  id String @id @db.Uuid
+  eventId String @map("event_id") @db.Uuid
+  event Event @relation(fields: [eventId], references: [id], onDelete: Restrict)
+  actorId String @map("actor_id")
+  actor User @relation(fields: [actorId], references: [id], onDelete: Restrict)
+  action String
+  version Int
+  reason String
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  @@unique([eventId, version])
+  @@map("event_audit")
+  @@schema("brag")
+}
+
+// Private owner-scoped capture. No publication projection is created by these tables.
+model ProjectDraft {
+  id String @id @db.Uuid
+  ownerId String @map("owner_id")
+  eventId String? @map("event_id") @db.Uuid
+  version Int @default(1)
+  fields Json
+  lastEdit Json @default("{}") @map("last_edit")
+  confirmedVersion Int? @map("confirmed_version")
+  confirmedAt DateTime? @map("confirmed_at") @db.Timestamptz(6)
+  discardedAt DateTime? @map("discarded_at") @db.Timestamptz(6)
+  legacyRecord Boolean @default(dbgenerated("false")) @map("legacy_record")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+  pitches VoicePitch[]
+  @@index([ownerId, eventId, createdAt, id], map: "project_draft_owner_event_created")
+  @@index([ownerId, createdAt(sort: Desc), id(sort: Desc)], map: "project_draft_owner_created")
+  @@unique([id, ownerId, eventId], map: "project_draft_binding")
+  @@map("project_draft")
+  @@schema("brag")
+}
+model DraftMutation {
+  actorId String @map("actor_id")
+  key String @db.Uuid
+  intentHash String @map("intent_hash")
+  result Json
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  @@id([actorId, key])
+  @@map("draft_mutation")
+  @@schema("brag")
+}
+model VoicePitch {
+  id String @id @db.Uuid
+  draftId String @map("draft_id") @db.Uuid
+  draft ProjectDraft @relation(fields: [draftId], references: [id], onDelete: Restrict)
+  ownerId String @map("owner_id")
+  key String @db.Uuid
+  mediaHash String @map("media_hash")
+  baseVersion Int @map("base_version")
+  policy String
+  configVersion Int? @map("config_version")
+  audioRemovedAt DateTime? @map("audio_removed_at") @db.Timestamptz(6)
+  recoveryConfigVersion Int? @map("recovery_config_version")
+  transcriptionAttempt Int @default(dbgenerated("1")) @map("transcription_attempt")
+  transcriptionStartedAt DateTime? @map("transcription_started_at") @db.Timestamptz(6)
+  admittedAt DateTime? @map("admitted_at") @db.Timestamptz(6)
+  sampleCount Int? @map("sample_count")
+  legacyReceived Boolean @default(dbgenerated("false")) @map("legacy_received")
+  status String
+  providerId String? @map("provider_id")
+  original Json?
+  corrected Json?
+  transcript String @default("")
+  proposal Json?
+  model String?
+  error String?
+  attempts Int @default(0)
+  leaseUntil DateTime? @map("lease_until") @db.Timestamptz(6)
+  nextAttempt DateTime @default(now()) @map("next_attempt") @db.Timestamptz(6)
+  cleanupPending Boolean @default(false) @map("cleanup_pending")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+  @@unique([ownerId, key])
+  @@index([draftId, createdAt(sort: Desc), id(sort: Desc)], map: "voice_pitch_draft_latest")
+  @@map("voice_pitch")
+  @@schema("brag")
+}
+
+model ProcessorConfig {
+  version Int @id
+  actorId String @map("actor_id")
+  requestId String @map("request_id") @db.Uuid
+  intentHmac String @map("intent_hmac")
+  enabled Boolean
+  distillOrigin String @map("distill_origin")
+  claudeModel String @map("claude_model")
+  hasDistill Boolean @map("has_distill")
+  hasClaude Boolean @map("has_claude")
+  sealed Json
+  changedFields String[] @map("changed_fields")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  @@unique([actorId, requestId])
+  @@map("processor_config")
+  @@schema("brag")
+}
+
+model AgentHandoff {
+  code String @id
+  draftId String @map("draft_id") @db.Uuid
+  ownerId String @map("owner_id")
+  expiresAt DateTime @map("expires_at") @db.Timestamptz(6)
+  revoked Boolean @default(false)
+  @@map("agent_handoff")
+  @@schema("brag")
+}
+model AgentRequest {
+  id String @id @db.Uuid
+  code String
+  secretHash String @unique @map("secret_hash")
+  verificationCode String @map("verification_code")
+  state String
+  expiresAt DateTime @map("expires_at") @db.Timestamptz(6)
+  @@map("agent_request")
+  @@schema("brag")
+}
+
+// Composite/deferred foreign keys, one-way triggers and partial uniqueness are owned by SQL.
+model AuthorEvent {
+  ownerId String @map("owner_id")
+  eventId String @map("event_id") @db.Uuid
+  linkedAt DateTime @default(dbgenerated("now()")) @map("linked_at") @db.Timestamptz(6)
+  origin String
+  @@id([ownerId,eventId])
+  @@index([ownerId,linkedAt(sort: Desc),eventId(sort: Desc)], map: "author_event_owner_linked")
+  @@map("author_event")
+  @@schema("brag")
+}
+model AuthorEventMutation {
+  actorId String @map("actor_id")
+  key String @db.Uuid
+  intentHash String @map("intent_hash")
+  eventId String @map("event_id") @db.Uuid
+  outcome String
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  @@id([actorId,key])
+  @@map("author_event_mutation")
+  @@schema("brag")
+}
+model AgentProposalUpload {
+  id String @id @db.Uuid
+  draftId String @map("draft_id") @db.Uuid
+  ownerId String @map("owner_id")
+  eventId String? @map("event_id") @db.Uuid
+  baseVersion Int @map("base_version")
+  secretHash String @unique @map("secret_hash")
+  createdAt DateTime @default(dbgenerated("now()")) @map("created_at") @db.Timestamptz(6)
+  expiresAt DateTime @default(dbgenerated("(now() + '00:30:00'::interval)")) @map("expires_at") @db.Timestamptz(6)
+  revokedAt DateTime? @map("revoked_at") @db.Timestamptz(6)
+  consumedProposalId String? @map("consumed_proposal_id") @db.Uuid
+  consumedAt DateTime? @map("consumed_at") @db.Timestamptz(6)
+  @@unique([id,draftId,ownerId,eventId,baseVersion])
+  @@unique([consumedProposalId,id,consumedAt])
+  @@map("agent_proposal_upload")
+  @@schema("brag")
+}
+model AgentProposal {
+  id String @id @db.Uuid
+  uploadId String @unique @map("upload_id") @db.Uuid
+  draftId String @map("draft_id") @db.Uuid
+  ownerId String @map("owner_id")
+  eventId String? @map("event_id") @db.Uuid
+  baseVersion Int @map("base_version")
+  requestKey String @map("request_key") @db.Uuid
+  intentHash String @map("intent_hash")
+  fields Json?
+  receivedAt DateTime @default(dbgenerated("now()")) @map("received_at") @db.Timestamptz(6)
+  retentionDeadline DateTime @default(dbgenerated("(now() + '720 hours'::interval)")) @map("retention_deadline") @db.Timestamptz(6)
+  acceptedVersion Int? @map("accepted_version")
+  clearedAt DateTime? @map("cleared_at") @db.Timestamptz(6)
+  @@unique([id,uploadId,receivedAt])
+  @@index([draftId, receivedAt(sort: Desc), id(sort: Desc)], map: "agent_proposal_draft_history")
+  @@map("agent_proposal")
+  @@schema("brag")
+}

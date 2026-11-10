@@ -1,0 +1,63 @@
+{
+  "name": "brag-codes",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24.0.0 <25"
+  },
+  "scripts": {
+    "ui:dev": "next dev ui-catalog --hostname 127.0.0.1 --port 3100",
+    "ui:build": "next build ui-catalog",
+    "ui:typecheck": "tsc --project ui-catalog/tsconfig.json --noEmit",
+    "ui:test": "playwright test --config ui-catalog/playwright.config.ts",
+    "ui:format:check": "prettier --check app/src/ui ui-catalog scripts/serve-catalog.mjs",
+    "app:setup": "node scripts/runtime-local.mjs setup",
+    "app:dev": "tsx --tsconfig app/tsconfig.json app/scripts/build-pwa.tsx && node scripts/runtime-local.mjs dev",
+    "app:start": "node scripts/runtime-local.mjs start",
+    "app:build": "tsx --tsconfig app/tsconfig.json app/scripts/build-pwa.tsx && next build app",
+    "app:typecheck": "tsc --project app/tsconfig.json --noEmit",
+    "app:format:check": "prettier --check app/src/app app/src/lib app/src/events app/src/projects app/src/publication app/src/deletion app/src/gallery app/src/moderation app/src/mobile app/src/integrations app/public app/src/instrumentation.ts app/scripts app/tests app/*.ts app/tsconfig.json scripts/runtime-*.mjs scripts/credential-key-local.mjs deploy/runtime/*.mjs",
+    "app:test": "node --conditions=react-server --import tsx --test app/tests/*.test.ts",
+    "app:test:integration": "node scripts/runtime-test.mjs",
+    "db:generate": "prisma generate --config app/prisma.config.ts",
+    "db:migrate": "node scripts/runtime-local.mjs migrate",
+    "db:up": "docker compose -f deploy/runtime/compose.yml up -d --wait database",
+    "db:down": "docker compose -f deploy/runtime/compose.yml down",
+    "admin:role": "node --conditions=react-server --import tsx app/scripts/admin-role.ts",
+    "credentials:setup": "node scripts/credential-key-local.mjs",
+    "deletions:ledger": "node --import tsx app/scripts/deletion-ledger.ts"
+  },
+  "dependencies": {
+    "@better-auth/prisma-adapter": "1.7.18",
+    "@prisma/adapter-pg": "7.10.1",
+    "@prisma/client": "7.10.1",
+    "better-auth": "1.7.18",
+    "htmlparser2": "12.0.0",
+    "jose": "6.2.12",
+    "jsqr": "1.4.0",
+    "next": "16.4.5",
+    "pg": "8.23.1",
+    "qrcode": "1.5.4",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "server-only": "0.0.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.65.0",
+    "@types/node": "24.13.4",
+    "@types/pg": "8.23.1",
+    "@types/qrcode": "1.5.6",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "prettier": "3.9.10",
+    "prisma": "7.10.1",
+    "tsx": "4.23.15",
+    "typescript": "6.0.3"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aperAI-eu/brag.codes.git"
+  }
+}

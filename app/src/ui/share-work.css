@@ -1,0 +1,266 @@
+.share-shell .access-main {
+  padding-top: 28px;
+}
+.share-home {
+  max-width: 480px;
+  margin: 32px auto;
+  display: grid;
+  gap: 18px;
+}
+.share-home h1 {
+  font-size: clamp(36px, 6vw, 54px);
+  line-height: 1.08;
+  letter-spacing: -1.8px;
+}
+.share-home > .button {
+  min-height: 56px;
+  width: 100%;
+}
+.share-context {
+  padding-bottom: 8px;
+  color: var(--muted);
+}
+.share-shortcuts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 12px 0 22px;
+  border-bottom: 1px solid var(--line);
+}
+.share-shortcuts .button:last-child {
+  grid-column: 1 / -1;
+}
+.share-shortcuts .button {
+  white-space: normal;
+}
+.share-shortcuts span {
+  color: var(--muted);
+}
+.share-list {
+  max-width: 700px;
+  margin: auto;
+  display: grid;
+  gap: 20px;
+}
+.share-list > .button {
+  justify-self: start;
+}
+.share-list h1 {
+  font-size: clamp(30px, 4vw, 40px);
+}
+.share-event {
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+  gap: 14px;
+  overflow-wrap: anywhere;
+}
+.share-event .tag {
+  justify-self: start;
+}
+.share-window {
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.share-window dt {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+.share-window dd {
+  margin: 0;
+}
+.share-project-card {
+  padding: 24px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: var(--radius);
+  display: grid;
+  gap: 12px;
+}
+.share-project-group ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 20px;
+}
+.share-project-card h2 {
+  margin: 0;
+  min-width: 0;
+  font-size: clamp(22px, 3vw, 28px);
+  line-height: 1.25;
+}
+.share-project-card h2 .button {
+  width: 100%;
+  padding: 0;
+  min-height: 44px;
+  font-size: inherit;
+  line-height: inherit;
+  color: var(--ink);
+  justify-content: space-between;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+.share-project-card h2 .button svg {
+  flex-shrink: 0;
+}
+.share-project-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.share-project-tags .tag {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  max-width: 100%;
+}
+.share-methods {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+.share-methods > p {
+  margin: 16px 0;
+}
+.share-capture {
+  max-width: 620px;
+}
+.share-capture code {
+  overflow-wrap: anywhere;
+}
+.access-fixtures > details {
+  margin-top: 10px;
+}
+.access-fixtures > details > summary {
+  cursor: pointer;
+  padding: 10px 0;
+  min-height: 44px;
+}
+@media (max-width: 400px) {
+  .share-shortcuts {
+    grid-template-columns: 1fr;
+  }
+  .share-window {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .share-project-card {
+    padding: 16px;
+  }
+}
+
+.pitch-recorder {
+  display: grid;
+  gap: 18px;
+}
+.pitch-recorder p,
+.pitch-recorder h1 {
+  margin: 0;
+}
+.pitch-recorder-clock {
+  text-align: center;
+  display: grid;
+  gap: 10px;
+  padding: 24px 12px 12px;
+}
+.pitch-recorder-clock [role="timer"] {
+  font-size: clamp(28px, 7vw, 40px);
+  font-variant-numeric: tabular-nums;
+}
+.pitch-recorder-clock [role="timer"] span {
+  color: var(--muted);
+  font-size: 20px;
+}
+.pitch-recorder-status {
+  font-weight: 700;
+}
+.pitch-recorder progress {
+  width: 100%;
+  height: 8px;
+  accent-color: var(--coral);
+}
+.pitch-recorder-warning {
+  font-size: 14px;
+  min-height: 22px;
+}
+.pitch-recorder-clock.is-near-limit {
+  background: var(--coral-soft);
+  border-radius: var(--radius);
+}
+.pitch-recorder-actions {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  padding: 8px 0 16px;
+}
+.button.pitch-recorder-control {
+  width: 100px;
+  min-width: 100px;
+  height: 100px;
+  padding: 10px;
+  border: 2px solid var(--coral);
+  border-radius: 50%;
+  background: var(--surface);
+}
+.button.pitch-recorder-control:hover:not(:disabled) {
+  background: var(--coral-soft);
+}
+.pitch-recorder-symbol {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--coral);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+.pitch-recorder-symbol.is-pause::before,
+.pitch-recorder-symbol.is-pause::after {
+  content: "";
+  width: 7px;
+  height: 26px;
+  background: white;
+  border-radius: 2px;
+}
+.pitch-recorder-label {
+  font-weight: 700;
+}
+.pitch-recorder-stop {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  background: currentColor;
+  border-radius: 2px;
+}
+.pitch-recorder-sound {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  min-height: 44px;
+  cursor: pointer;
+}
+.pitch-recorder-sound input {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--coral);
+}
+
+.share-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.share-recovery-text {
+  width: 100%;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  font: inherit;
+}

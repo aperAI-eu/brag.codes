@@ -1,0 +1,16 @@
+.project-delete-section {
+  border-top: 1px solid var(--line);
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+}
+.project-delete-title {
+  overflow-wrap: anywhere;
+}
+.button.project-delete-button {
+  color: #8a2e23;
+  border-color: #8a2e23;
+  background: #fff6f2;
+}
+.button.project-delete-button:hover:not(:disabled) {
+  background: #fbe4dc;
+}

@@ -1,0 +1,589 @@
+.access-preview {
+  min-height: 100vh;
+}
+.access-fixtures {
+  padding: 16px 24px;
+  background: #eaece5;
+  border-bottom: 1px solid var(--line);
+  font-size: 12px;
+}
+.access-fixtures strong {
+  font-size: 11px;
+  letter-spacing: 0.05em;
+}
+.access-fixtures p {
+  margin-top: 5px;
+  color: #565d54;
+}
+.access-fixture-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin-top: 12px;
+}
+.access-fixture-actions .button {
+  font-size: 12px;
+  min-height: 44px;
+  padding: 8px 12px;
+}
+.access-fixture-actions select {
+  max-width: 100%;
+  min-height: 44px;
+  border: 1px solid var(--line);
+  background: white;
+  border-radius: 7px;
+  padding: 8px;
+}
+.access-fixture-actions a {
+  text-decoration: underline;
+  padding: 12px 0;
+}
+.access-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--line);
+}
+.access-main {
+  max-width: 1080px;
+  margin: auto;
+  padding: 40px 24px 80px;
+}
+.access-home {
+  max-width: 430px;
+  margin: 48px auto;
+  display: grid;
+  gap: 20px;
+}
+.access-home h1 {
+  font-size: clamp(36px, 6vw, 52px);
+  line-height: 1.08;
+  letter-spacing: -1.8px;
+}
+.access-home .button {
+  width: 100%;
+  min-height: 56px;
+}
+.access-card {
+  max-width: 470px;
+  margin: 16px auto;
+  background: var(--surface);
+  padding: 30px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  display: grid;
+  gap: 20px;
+}
+.access-card h1,
+.access-admin h1 {
+  font-size: 32px;
+  line-height: 1.15;
+  letter-spacing: -0.7px;
+}
+.access-provider-list {
+  display: grid;
+  gap: 12px;
+}
+.access-provider-list .button {
+  width: 100%;
+  min-height: 50px;
+}
+.access-divider {
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
+}
+.access-error {
+  border-left: 3px solid var(--coral);
+  padding: 10px 12px;
+  background: var(--coral-soft);
+  font-size: 14px;
+}
+.access-notice {
+  max-width: 470px;
+  margin: 0 auto 20px;
+  padding: 12px 16px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  font-size: 14px;
+}
+.access-account-menu {
+  position: relative;
+  flex: 0 0 auto;
+}
+.access-account-menu summary {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 4px 8px;
+  cursor: pointer;
+  list-style: none;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: 10px;
+}
+.access-account-menu summary::-webkit-details-marker {
+  display: none;
+}
+.access-initials {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  color: #8d3627;
+  background: var(--coral-soft);
+  font-weight: bold;
+}
+.access-account-panel {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 8px);
+  right: 0;
+  width: min(280px, calc(100vw - 40px));
+  max-height: calc(100svh - 100px);
+  overflow-y: auto;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+  box-shadow: 0 12px 32px #252b2720;
+  display: grid;
+  gap: 8px;
+}
+.access-account-panel > strong,
+.access-account-panel > span {
+  overflow-wrap: anywhere;
+}
+.access-account-panel .button {
+  width: 100%;
+  justify-content: flex-start;
+  min-height: 44px;
+}
+.access-admin {
+  display: grid;
+  gap: 18px;
+}
+.access-admin-heading {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+.access-admin-heading .eyebrow {
+  margin-bottom: 8px;
+}
+.access-event {
+  max-width: none;
+  width: 100%;
+  margin: 4px 0;
+}
+.access-event h3 {
+  font-size: 15px;
+}
+.access-window {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin: 0;
+}
+.access-window dt {
+  font-size: 12px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+.access-window dd {
+  margin: 0;
+  font-size: 15px;
+}
+.catalogue-access-link {
+  padding: 24px;
+  margin: 26px 0;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  display: grid;
+  gap: 16px;
+}
+.catalogue-access-link > .button {
+  justify-self: start;
+}
+.admin-flow {
+  width: 100%;
+  max-width: 560px;
+  min-width: 0;
+}
+.admin-flow > .button:first-child {
+  justify-self: start;
+}
+.admin-form,
+.admin-window-fields,
+.admin-fixture-note {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+.admin-form .field,
+.admin-form .text-input {
+  min-width: 0;
+  width: 100%;
+}
+.admin-form .field {
+  margin: 0;
+}
+.admin-form .text-input {
+  font-size: 16px;
+}
+.admin-form .field p:empty {
+  display: none;
+}
+.admin-window-fields {
+  margin: 0;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+.admin-window-fields legend {
+  padding: 0 4px;
+  font-size: 15px;
+  font-weight: 700;
+}
+.admin-camera {
+  display: grid;
+  place-items: center;
+  gap: 16px;
+  min-height: 220px;
+  padding: 24px;
+  border: 2px dashed #899082;
+  border-radius: 16px;
+  background: #f3f4ee;
+  text-align: center;
+}
+.admin-camera p {
+  font-size: 14px;
+}
+.admin-fixture-note {
+  padding: 14px;
+  background: #f3f4ee;
+  border-radius: 10px;
+}
+.admin-source,
+.admin-examples code {
+  overflow-wrap: anywhere;
+  user-select: text;
+}
+.admin-examples {
+  font-size: 13px;
+}
+.admin-examples summary {
+  cursor: pointer;
+  min-height: 44px;
+  padding: 12px 0;
+}
+.admin-examples p {
+  margin-top: 10px;
+}
+@media (max-width: 600px) {
+  .access-fixtures {
+    padding: 14px 16px;
+  }
+  .access-fixture-actions select {
+    font-size: 16px;
+  }
+  .access-header {
+    padding: 16px;
+  }
+  .access-header .brand {
+    font-size: 25px;
+  }
+  .access-main {
+    padding: 24px 16px 60px;
+  }
+  .access-card {
+    padding: 22px;
+    border-radius: 16px;
+  }
+  .access-card h1,
+  .access-admin h1 {
+    font-size: 28px;
+  }
+  .access-home {
+    margin: 30px auto;
+  }
+  .access-window {
+    grid-template-columns: 1fr;
+  }
+  .access-admin-heading > .button {
+    width: 100%;
+  }
+  .admin-flow {
+    padding: 18px;
+  }
+  .admin-window-fields {
+    padding: 12px;
+  }
+}
+.event-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: end;
+}
+.event-filters .field {
+  margin: 0;
+  flex: 1 1 180px;
+  min-width: 0;
+}
+.event-filters .text-input {
+  width: 100%;
+}
+.event-table {
+  overflow-x: auto;
+}
+.event-table table {
+  border-collapse: collapse;
+  width: 100%;
+  text-align: left;
+}
+.event-table th,
+.event-table td {
+  padding: 16px 12px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+.event-table p {
+  margin-top: 8px;
+}
+.event-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.event-alias {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--line);
+  padding: 12px 0;
+}
+.event-alias p {
+  flex: 1 1 240px;
+}
+.event-description {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.access-event {
+  min-width: 0;
+}
+@media (max-width: 600px) {
+  .event-table thead {
+    display: none;
+  }
+  .event-table table,
+  .event-table tbody,
+  .event-table tr,
+  .event-table td {
+    display: block;
+  }
+  .event-table tr {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    margin: 16px 0;
+    padding: 12px;
+  }
+  .event-table td {
+    border: 0;
+    padding: 8px;
+    overflow-wrap: anywhere;
+  }
+  .event-filters {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.event-workspace {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+
+.capture-card {
+  max-width: 680px;
+}
+.capture-choices {
+  display: grid;
+  gap: 16px;
+}
+.capture-choices button {
+  justify-content: flex-start;
+  text-align: left;
+  padding: 22px;
+}
+.capture-choices strong,
+.capture-choices small {
+  display: block;
+}
+.capture-choices small {
+  margin-top: 6px;
+  font-weight: normal;
+}
+.capture-card textarea {
+  resize: vertical;
+}
+.capture-card audio {
+  width: 100%;
+  margin: 16px 0;
+}
+.pitch-timer {
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-align: center;
+  margin: 24px 0;
+}
+.pitch-proposal {
+  padding: 20px;
+  border: 1px solid var(--line, #d8dccf);
+  border-radius: 16px;
+  margin: 16px 0;
+}
+.agent-instruction,
+.capture-card code {
+  overflow-wrap: anywhere;
+}
+
+.capture-card .field {
+  margin: 0;
+}
+.capture-card > .button-quiet {
+  justify-self: start;
+}
+
+.integration-settings {
+  max-width: 720px;
+  margin: 24px auto;
+}
+.integration-settings .field {
+  margin: 20px 0;
+}
+.integration-settings .text-input {
+  font-size: 16px;
+}
+.integration-settings .field label {
+  font-size: 14px;
+}
+.integration-settings h2 {
+  margin-top: 32px;
+}
+.integration-toggle {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 20px 0;
+}
+.integration-toggle input {
+  flex: 0 0 auto;
+  margin-top: 5px;
+}
+.integration-settings input:not([type="checkbox"]) {
+  width: 100%;
+  min-width: 0;
+}
+
+.project-details {
+  margin-block: 1rem;
+}
+.project-details summary {
+  cursor: pointer;
+  font-weight: 700;
+  padding-block: 0.75rem;
+}
+.project-details .field {
+  margin-block: 1rem;
+}
+.project-pattern {
+  min-width: 0;
+  margin-block: 1rem;
+  border: 1px solid var(--border, #d9ddce);
+  border-radius: 12px;
+  padding: 1rem;
+}
+.draft-list {
+  list-style: none;
+  padding: 0;
+}
+.draft-list li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding-block: 1rem;
+  border-bottom: 1px solid var(--border, #d9ddce);
+  overflow-wrap: anywhere;
+}
+.draft-list a {
+  font-weight: 700;
+}
+
+.event-camera {
+  overflow: hidden;
+  border-radius: 14px;
+  background: #20241e;
+  aspect-ratio: 1;
+}
+.event-camera video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.event-scanner form {
+  display: grid;
+  gap: 16px;
+}
+.event-scanner .button {
+  min-height: 48px;
+}
+
+.pitch-progress {
+  padding: 1rem;
+  border: 1px solid var(--border, #d9ddce);
+  border-radius: 14px;
+  background: #f5f6ef;
+  margin-block: 1rem;
+}
+.pitch-progress h2 {
+  font-size: 1.3rem;
+  margin-block: 1rem 0.5rem;
+}
+.pitch-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.3rem;
+  padding-left: 1.2rem;
+  font-size: 0.75rem;
+}
+.pitch-steps li[aria-current="step"] {
+  font-weight: 700;
+  color: #b52b18;
+}
+.pitch-steps .complete {
+  color: #416440;
+}
+.pitch-recording-label {
+  font-weight: 700;
+  color: #b52b18;
+}
+.capture-card progress {
+  width: 100%;
+  accent-color: #d93d28;
+}

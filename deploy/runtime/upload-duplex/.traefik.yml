@@ -1,0 +1,5 @@
+displayName: Brag bounded upload responses
+type: middleware
+import: github.com/aperAI-eu/brag.codes/uploadduplex
+summary: Allow early bounded responses while an HTTP/1 upload is still reading.
+testData: {}

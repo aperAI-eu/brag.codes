@@ -1,0 +1,88 @@
+name: brag-runtime-local
+services:
+  database:
+    image: postgres:18.6-bookworm@sha256:5c4783a8cc3f0074912164f94dfa1be4e043438f0f707cf968d7af9a0d31a2c8
+    env_file: ${BRAG_RUNTIME_DIR:-../../.localfiles/runtime-dev}/postgres.env
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: brag
+      POSTGRES_INITDB_ARGS: --auth-host=scram-sha-256
+    volumes:
+      - postgres-data:/var/lib/postgresql
+      - ./init-db.sh:/docker-entrypoint-initdb.d/10-brag.sh:ro
+      - ./provision-operator.sh:/opt/brag/provision-operator.sh:ro
+    ports: ["127.0.0.1:${BRAG_DATABASE_PORT:-55432}:5432"]
+    command: [postgres, -c, shared_buffers=64MB, -c, max_connections=30]
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U postgres -d brag"]
+      interval: 2s
+      timeout: 2s
+      retries: 30
+    mem_limit: 256m
+    cpus: 1
+    pids_limit: 128
+    networks: [database]
+  migrate:
+    profiles: [tools]
+    image: ${BRAG_MIGRATION_IMAGE:-brag-migrations:local}
+    build:
+      context: ../..
+      dockerfile: deploy/runtime/Dockerfile
+      target: migration
+    environment:
+      MIGRATION_DATABASE_URL_FILE: /run/secrets/migration_database_url
+    secrets: [migration_database_url]
+    depends_on:
+      database: { condition: service_healthy }
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    tmpfs: ["/tmp:size=32m,mode=1777"]
+    mem_limit: 512m
+    pids_limit: 128
+    networks: [database]
+  web:
+    image: ${BRAG_APP_IMAGE:-brag-app:local}
+    build:
+      context: ../..
+      dockerfile: deploy/runtime/Dockerfile
+      target: runtime
+    environment:
+      BRAG_ENV: local
+      APP_ORIGIN: http://127.0.0.1:3200
+      DATABASE_URL_FILE: /run/secrets/runtime_database_url
+      AUTH_SECRET_FILE: /run/identity/session-secret
+      BRAG_CREDENTIAL_KEY_FILE: /run/identity/credential-key
+      BRAG_PITCH_WORKER_PAUSED: ${BRAG_PITCH_WORKER_PAUSED:-0}
+      BRAG_PITCH_AUDIO_DIR: /var/lib/brag/pitches
+      GOOGLE_CLIENT_ID_FILE: ${BRAG_GOOGLE_ENABLED:+/run/identity/google-client-id}
+      GOOGLE_CLIENT_SECRET_FILE: ${BRAG_GOOGLE_ENABLED:+/run/identity/google-client-secret}
+      GITHUB_CLIENT_ID_FILE: ${BRAG_GITHUB_ENABLED:+/run/identity/github-client-id}
+      GITHUB_CLIENT_SECRET_FILE: ${BRAG_GITHUB_ENABLED:+/run/identity/github-client-secret}
+      HOSTNAME: 0.0.0.0
+      PORT: "3200"
+    secrets: [runtime_database_url]
+    volumes:
+      - pitch-audio:/var/lib/brag/pitches
+      - ${BRAG_RUNTIME_DIR:-../../.localfiles/runtime-dev}/identity:/run/identity:ro
+    depends_on:
+      database: { condition: service_healthy }
+    ports: ["127.0.0.1:3200:3200"]
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    tmpfs: ["/tmp:size=32m,mode=1777"]
+    mem_limit: 384m
+    cpus: 1
+    pids_limit: 128
+    networks: [database]
+secrets:
+  runtime_database_url:
+    file: ${BRAG_RUNTIME_DIR:-../../.localfiles/runtime-dev}/runtime-docker.url
+  migration_database_url:
+    file: ${BRAG_RUNTIME_DIR:-../../.localfiles/runtime-dev}/migration-docker.url
+volumes:
+  pitch-audio: {}
+  postgres-data: {}
+networks:
+  database: {}

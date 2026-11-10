@@ -1,0 +1,40 @@
+experimental:
+  localPlugins:
+    uploadduplex:
+      moduleName: github.com/aperAI-eu/brag.codes/uploadduplex
+api:
+  dashboard: false
+log:
+  level: WARN
+ping:
+  entryPoint: health
+entryPoints:
+  health:
+    address: "127.0.0.1:8082"
+  web:
+    address: ":8080"
+    http:
+      redirections:
+        entryPoint:
+          to: ":443"
+          scheme: https
+          permanent: true
+  websecure:
+    address: ":8443"
+    transport:
+      respondingTimeouts:
+        readTimeout: 90s
+        writeTimeout: 90s
+        idleTimeout: 180s
+      lifeCycle:
+        graceTimeOut: 75s
+providers:
+  file:
+    filename: /etc/traefik/routes.yml
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      email: test@example.invalid
+      storage: /acme/acme.json
+      httpChallenge:
+        entryPoint: web
